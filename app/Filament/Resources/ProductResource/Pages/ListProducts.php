@@ -18,9 +18,9 @@ class ListProducts extends ListRecords
                 ->button()
                 ->color('gray') // neutral color to allow custom bg
                 ->extraAttributes([
-                    'style' => 'background-color: #344966; color: white;',
+                    'style' => 'background-color: #1A5275; color: white;',
                     'onmouseover' => "this.style.backgroundColor='#2c3d59'",
-                    'onmouseout' => "this.style.backgroundColor='#344966'",
+                    'onmouseout' => "this.style.backgroundColor='#1A5275'",
                 ]),
         ];
     }
