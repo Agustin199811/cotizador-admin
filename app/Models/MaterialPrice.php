@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MaterialPrice extends Model
 {
@@ -12,6 +13,7 @@ class MaterialPrice extends Model
         'format',
         'thickness',
     ];
+    use SoftDeletes;
 
     public function material()
     {
