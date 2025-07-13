@@ -28,7 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Moduforma')
-            //->brandLogo(asset('img/moduformalogo.svg'))
+            ->brandLogo(asset('img/trans.png'))
+            ->brandLogoHeight('68px')
             ->colors([
                 'primary' => '#1A5275',
             ])

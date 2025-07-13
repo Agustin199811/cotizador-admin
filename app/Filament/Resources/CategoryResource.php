@@ -17,7 +17,9 @@ class CategoryResource extends Resource
 {
     protected static ?string $model = Category::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $navigationLabel = 'Categorías';
+    protected static ?string $navigationGroup = 'Inventario';
 
     public static function form(Form $form): Form
     {
@@ -25,11 +27,9 @@ class CategoryResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('slug')
-                    ->required()
                     ->maxLength(255)
-                    ->unique(ignoreRecord: true),
+                    ->label('Nombre'),
+
             ]);
     }
 
@@ -37,8 +37,19 @@ class CategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->searchable(),
-                Tables\Columns\TextColumn::make('slug'),
+                Tables\Columns\TextColumn::make('name')
+                ->searchable()
+                ->label('Nombre'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->label('Fecha de Creación'),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: false)
+                    ->label('Fecha de Actualización'),
             ])
             ->filters([
                 //
