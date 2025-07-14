@@ -42,7 +42,12 @@ class QuoteResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('download_pdf')
+                    ->label('Descargar PDF')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->url(fn(Quote $record) => route('quotes.download', $record))
+                    ->openUrlInNewTab(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -54,7 +59,7 @@ class QuoteResource extends Resource
     public static function getRelations(): array
     {
         return [
-              ItemsRelationManager::class,
+            ItemsRelationManager::class,
         ];
     }
 
