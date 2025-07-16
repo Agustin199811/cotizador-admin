@@ -43,6 +43,19 @@ class QuoteForm extends Component
         $this->recalculate();
     }
 
+
+    public function removeItem($index)
+    {
+        if (count($this->items) <= 1) {
+            return; // No permitir eliminar el último ítem
+        }
+
+        unset($this->items[$index]);
+        $this->items = array_values($this->items); // Reindexar
+        $this->recalculate();
+    }
+
+
     public function updated($name, $value)
     {
         if (str_starts_with($name, 'items')) {
@@ -105,16 +118,7 @@ class QuoteForm extends Component
 
     public function submit()
     {
-        $this->validate([
-            'client_name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'items' => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.material_price_id' => 'required|exists:material_prices,id',
-            'items.*.width' => 'required|numeric|min:1',
-            'items.*.depth' => 'required|numeric|min:1',
-            'items.*.quantity' => 'required|integer|min:1',
-        ]);
+        $this->validate($this->rules(), $this->messages());
 
         $quote = Quote::create([
             'client_name' => $this->client_name,
@@ -136,10 +140,48 @@ class QuoteForm extends Component
         }
 
         session()->flash('message', '¡Cotización enviada exitosamente!');
+        session()->flash('quote_id', $quote->id);
         return redirect()->route('quote.create');
     }
 
-    public function render()
+    public function rules()
+    {
+        return [
+            'client_name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'items' => 'required|array|min:1',
+            'items.*.product_id' => 'required|exists:products,id',
+            'items.*.material_price_id' => 'required|exists:material_prices,id',
+            'items.*.width' => 'required|numeric|min:1',
+            'items.*.depth' => 'required|numeric|min:1',
+            'items.*.quantity' => 'required|integer|min:1',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'client_name.required' => 'El nombre es obligatorio.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo debe ser válido.',
+            'items.required' => 'Debe agregar al menos un ítem para cotizar.',
+            'items.*.product_id.required' => 'Seleccione un producto.',
+            'items.*.product_id.exists' => 'El producto seleccionado no es válido.',
+            'items.*.material_price_id.required' => 'Seleccione un material.',
+            'items.*.material_price_id.exists' => 'El material seleccionado no es válido.',
+            'items.*.width.required' => 'El ancho es obligatorio.',
+            'items.*.width.numeric' => 'El ancho debe ser un número.',
+            'items.*.width.min' => 'El ancho debe ser mayor que cero.',
+            'items.*.depth.required' => 'La profundidad es obligatoria.',
+            'items.*.depth.numeric' => 'La profundidad debe ser un número.',
+            'items.*.depth.min' => 'La profundidad debe ser mayor que cero.',
+            'items.*.quantity.required' => 'Debe ingresar una cantidad.',
+            'items.*.quantity.integer' => 'La cantidad debe ser un número entero.',
+            'items.*.quantity.min' => 'La cantidad debe ser al menos 1.',
+        ];
+    }
+
+    public function render(): View
     {
         return view('livewire.quote-form')->layout('layouts.app');
     }
