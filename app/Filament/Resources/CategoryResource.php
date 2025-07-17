@@ -68,9 +68,14 @@ class CategoryResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-                Tables\Actions\ForceDeleteAction::make(), // Eliminación permanente
-                Tables\Actions\RestoreAction::make(), // Restaurar soft delete
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn() => auth()->user()?->hasRole('superadmin')),
+
+                Tables\Actions\ForceDeleteAction::make()
+                    ->visible(fn($record) => $record->trashed() && auth()->user()?->hasRole('superadmin')),
+
+                Tables\Actions\RestoreAction::make()
+                    ->visible(fn($record) => $record->trashed() && auth()->user()?->hasRole('superadmin')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
