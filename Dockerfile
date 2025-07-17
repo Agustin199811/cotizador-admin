@@ -42,4 +42,5 @@ RUN composer install --no-dev --optimize-autoloader
 # Asignar permisos correctos
 RUN chown -R www-data:www-data storage bootstrap/cache public/build
 
-EXPOSE 80
+CMD php artisan migrate --force && apache2-foreground
+
