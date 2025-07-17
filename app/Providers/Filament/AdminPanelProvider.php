@@ -17,6 +17,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Pxlrbt\FilamentActivityLog\Resources\ActivityResource;
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -34,6 +36,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => '#1A5275',
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+        
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
