@@ -2,11 +2,9 @@
 FROM node:18 as node
 WORKDIR /app
 
-# Copiar package.json y instalar dependencias JS
 COPY package*.json ./
 RUN npm install
 
-# Copiar todos los archivos y compilar los assets de Vite
 COPY . ./
 RUN npm run build
 
@@ -20,11 +18,10 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
     && docker-php-ext-install pdo pdo_pgsql zip intl gd
 
-# Habilitar mod_rewrite de Apache y configurar DocumentRoot a /public
+# Habilitar mod_rewrite y configurar DocumentRoot a /public
 RUN a2enmod rewrite
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Configurar permisos para Laravel
 RUN echo '<Directory /var/www/html/public>\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
@@ -32,22 +29,25 @@ RUN echo '<Directory /var/www/html/public>\n\
 </Directory>' > /etc/apache2/conf-available/laravel.conf \
     && a2enconf laravel
 
-# Establecer directorio de trabajo
 WORKDIR /var/www/html
 
-# Copiar código desde el contenedor Node
 COPY --from=node /app /var/www/html
 
-# Copiar Composer desde su imagen oficial
+# Copiar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Instalar dependencias PHP (sin dev para producción)
+# Instalar dependencias PHP sin las de desarrollo
 RUN composer install --no-dev --optimize-autoloader
 
-# Compilar assets de Filament (para Filament 3)
-RUN php artisan filament:assets
+# Compilar assets de Filament si usas Filament 3
+RUN php artisan filament:assets || true
 
-# Asignar permisos correctos para Laravel
+# Cache de config y rutas
+RUN php artisan config:cache && \
+    php artisan route:cache && \
+    php artisan view:cache
+
+# Asignar permisos correctos
 RUN chown -R www-data:www-data storage bootstrap/cache public/build
 
 # Comando de inicio
