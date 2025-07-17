@@ -7,7 +7,7 @@
 
     <title>Tu Cotizador</title>
 
-    @vite(['resources/css/app.css', 'resources/css/filament/theme.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @livewireStyles
 </head>
