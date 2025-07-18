@@ -57,20 +57,28 @@
             <div class="bg-white p-8 rounded-lg shadow-lg">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6">Cotiza Online!</h2>
 
-                @if (session()->has('message'))
-                    <div class="mb-4 p-4 bg-green-100 text-green-700 rounded shadow flex flex-col gap-2">
-                        <div>{{ session('message') }}</div>
+                @if (session('quote_id'))
+                    <div class="flex flex-wrap items-center gap-3">
+                        {{-- Botón PDF --}}
+                        <a href="{{ route('quote.download', ['quote' => session('quote_id')]) }}"
+                            class="inline-flex items-center justify-center gap-2 bg-[#1A5275] text-white px-4 py-2 rounded-full hover:bg-[#154360] transition shadow w-fit">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Descargar PDF
+                        </a>
 
-                        @if (session('quote_id'))
-                            <a href="{{ route('quote.download', ['quote' => session('quote_id')]) }}"
-                                class="inline-flex items-center justify-center gap-2 bg-[#1A5275] text-white px-4 py-2 rounded-full hover:bg-[#154360] transition shadow w-fit">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                                </svg>
-                                Descargar PDF
-                            </a>
-                        @endif
+                        {{-- Botón WhatsApp --}}
+                        <a href="https://wa.me/message/UW5TVB5SSVAAO1" target="_blank"
+                            class="inline-flex items-center justify-center gap-2 bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition shadow w-fit">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M20.52 3.48A11.91 11.91 0 0 0 12 0C5.37 0 .02 5.35 0 11.97a11.94 11.94 0 0 0 1.62 6.01L0 24l6.21-1.62A11.95 11.95 0 0 0 12 24c6.63 0 12-5.37 12-12a11.9 11.9 0 0 0-3.48-8.52zM12 21.5c-1.88 0-3.74-.5-5.38-1.46l-.38-.22-3.69.97.98-3.6-.25-.38A9.49 9.49 0 0 1 2.5 12C2.5 6.76 6.76 2.5 12 2.5S21.5 6.76 21.5 12 17.24 21.5 12 21.5zm5.4-7.61c-.29-.15-1.71-.84-1.98-.94-.27-.1-.47-.15-.67.15s-.77.94-.95 1.13-.35.22-.64.07a7.7 7.7 0 0 1-2.26-1.39 8.51 8.51 0 0 1-1.57-1.95c-.16-.27-.02-.42.12-.56.12-.12.27-.3.4-.45.14-.15.18-.26.27-.43.09-.18.05-.33-.02-.46s-.67-1.61-.91-2.2c-.24-.58-.48-.5-.67-.5h-.57c-.18 0-.46.06-.7.33s-.92.9-.92 2.18c0 1.29.95 2.53 1.08 2.7.13.18 1.87 2.86 4.52 4.01.63.27 1.13.43 1.51.55.64.2 1.22.17 1.68.1.51-.08 1.71-.7 1.95-1.37.24-.68.24-1.27.17-1.37-.06-.1-.25-.16-.54-.3z" />
+                            </svg>
+                            Prueba tu mueble con IA
+                        </a>
                     </div>
                 @endif
                 <form wire:submit.prevent="submit" class="space-y-6">
